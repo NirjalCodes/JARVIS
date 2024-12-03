@@ -1,155 +1,88 @@
-let btn = document.querySelector("#btn");
-let content = document.querySelector("#content");
-let voice = document.querySelector("#voice"); // Assuming this element exists for displaying status
-let textInput = document.querySelector("#textInput");
-let submitButton = document.querySelector("#submitButton");
-
-// Speech synthesis voice selection
-let voices = [];
-
-function getVoices() {
-    voices = window.speechSynthesis.getVoices();
-}
-
-window.speechSynthesis.onvoiceschanged = getVoices;  // Ensure voices are loaded
-
 function speak(text) {
-    let text_speak = new SpeechSynthesisUtterance(text);
-    text_speak.rate = 1;
-    text_speak.pitch = 1;
-    text_speak.volume = 1;
-    text_speak.lang = "en-US";
-
-    // Select a robotic or synthetic voice similar to Jarvis
-    let jarvisVoice = voices.find(voice => 
-        voice.name.includes("Google UK English Male") || voice.name.includes("Microsoft David Desktop - English (United States)")
-    );
-    
-    text_speak.voice = jarvisVoice || voices[0]; // Fallback to default voice if no match is found
-    window.speechSynthesis.speak(text_speak);
-}
-
-function wishMe() {
-    let day = new Date();
-    let hours = day.getHours();
-    if (hours >= 0 && hours < 12) {
-        speak("Good Morning");
-    } else if (hours >= 12 && hours < 16) {
-        speak("Good Afternoon");
+    if ('speechSynthesis' in window) {
+        let text_speak = new SpeechSynthesisUtterance(text);
+        
+        text_speak.rate = 1;
+        text_speak.pitch = 1;
+        text_speak.volume = 1;
+        text_speak.lang = "en-GB";
+        
+        window.speechSynthesis.cancel();  // Stop any ongoing speech
+        window.speechSynthesis.speak(text_speak);
     } else {
-        speak("Good Evening");
+        console.error("Speech synthesis is not supported in this browser.");
     }
 }
 
-window.addEventListener('load', () => {
-    wishMe();
+// Event listeners for each button to trigger specific responses
+document.querySelector("#btn1").addEventListener("click", () => {
+    speak("Bhaktapur Durbar Square is a historic square located in the heart of Bhaktapur, Nepal. It's known for its rich culture, ancient temples, palaces, and impressive architecture. It's a UNESCO World Heritage Site.");
 });
 
-// Speech recognition setup
-let speechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-let recognition = speechRecognition ? new speechRecognition() : null;
-
-if (recognition) {
-    recognition.onresult = (event) => {
-        let currentIndex = event.resultIndex;
-        let transcript = event.results[currentIndex][0].transcript;
-        content.innerText = transcript;
-        takeCommand(transcript);
-    };
-
-    btn.addEventListener("click", () => {
-        recognition.start();
-        btn.style.display = "none";
-        voice.style.display = "block"; // Assuming this is a status element showing that speech is recognized
-    });
-} else {
-    console.warn("Speech Recognition is not supported in this browser.");
-}
-
-// Handle text input submission
-submitButton.addEventListener("click", () => {
-    const userText = textInput.value.trim();
-    if (userText) {
-        content.innerText = userText;
-        takeCommand(userText);
-        textInput.value = ''; // Clear the input field after submission
-    } else {
-        speak("Please enter some text.");
-    }
+document.querySelector("#btn2").addEventListener("click", () => {
+    speak("The 55-Window Palace, also known as the Panchal Chhen, is one of the most iconic structures in Bhaktapur Durbar Square. Built by King Yakshya Malla in the 15th century, it is renowned for its 55 intricately designed windows.");
 });
 
-async function takeCommand(message) {
-    btn.style.display = "flex";
-    voice.style.display = "none"; // Hide the voice recognition status
+document.querySelector("#btn3").addEventListener("click", () => {
+    speak("The Vatsala Temple is an important religious site in Bhaktapur Durbar Square. It is famous for its intricate carvings and a large bell, which is said to have a distinctive sound that can be heard throughout the square.");
+});
 
-    if (message.includes("hello") || message.includes("hey")) {
-        speak("Hello, How can I assist you today?");
-    } else if (message.includes("Who are you")) {
-        speak("I am your virtual assistant, just like Jarvis.");
-    } else if (message.includes("What is your name")) {
-        speak("I am Jarvis, your personal assistant.");
-    } else {
-        let searchQuery = message.replace("Nrx", "").trim();
-        if (searchQuery) {
-            speak(`Let me find information about ${searchQuery} for you.`);
-            fetchWikipediaData(searchQuery);
-        } else {
-            speak("Sorry, I didn't quite catch that.");
-        }
-    }
-}
+document.querySelector("#btn4").addEventListener("click", () => {
+    speak("Bhaktapur Durbar Square is a UNESCO World Heritage Site due to its exceptional cultural value, rich history, and well-preserved medieval architecture. It is a living museum of art, culture, and religion, with many ancient temples and palaces.");
+});
 
-async function fetchWikipediaData(query) {
-    try {
-        console.log("Searching Wikipedia for:", query);
+document.querySelector("#btn5").addEventListener("click", () => {
+    speak("Bhaktapur Durbar Square is a hub for many traditional festivals. The most famous is the Bisket Jatra, a chariot procession that takes place every April. Other festivals like Indra Jatra and Dashain are also celebrated with grand processions and rituals.");
+});
 
-        // Construct the API URL and encode the query to handle special characters
-        const url = `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro=&explaintext=&titles=${encodeURIComponent(query)}&redirects=true`;
+document.querySelector("#btn6").addEventListener("click", () => {
+    speak("The Bhaktapur Durbar Square Museum, housed in the old royal palace, holds a collection of artifacts that reflect the city's history, culture, and the Malla kings' influence. Visitors can see ancient statues, paintings, manuscripts, and royal relics, offering insight into Bhaktapur's heritage.");
+});
 
-        // Add a timeout to avoid hanging forever
-        const fetchPromise = fetch(url).then(response => {
-            if (!response.ok) {
-                throw new Error(`Failed to fetch: ${response.status}`);
-            }
-            return response.json();
-        });
+document.querySelector("#btn7").addEventListener("click", () => {
+    speak("The Malla kings played a crucial role in shaping the architecture, culture, and religious life of Bhaktapur. They were great patrons of art and commissioned the construction of many temples, palaces, and public buildings. Their reign is reflected in the rich cultural legacy of Bhaktapur Durbar Square.");
+});
 
-        const data = await Promise.race([fetchPromise, new Promise((_, reject) => setTimeout(() => reject(new Error("Request timed out")), 5000))]);
+document.querySelector("#btn8").addEventListener("click", () => {
+    speak("The Golden Gate is an intricately designed, gilded door that leads to the Hiranya Varna Mahavihar, a Buddhist monastery. It is considered one of the finest examples of Nepali craftsmanship, featuring detailed metalwork and carvings, and is one of the most photographed sites in Bhaktapur.");
+});
 
-        console.log("Wikipedia API response:", data);
+document.querySelector("#btn9").addEventListener("click", () => {
+    speak("The Dattatreya Temple in Bhaktapur is dedicated to the deity Dattatreya, who represents the combined forms of the gods Brahma, Vishnu, and Shiva. It is a prominent temple in the city, known for its unique architecture and the beautiful wood carvings that adorn its structure.");
+});
 
-        const pages = data.query.pages;
-        const pageId = Object.keys(pages)[0];
+document.querySelector("#btn10").addEventListener("click", () => {
+    speak("The Taleju Temple in Bhaktapur is one of the most important Hindu temples in the city, dedicated to the goddess Taleju. It was built during the Malla period and is known for its exquisite architectural style, blending Hindu and Buddhist elements. Only Hindus are allowed to enter, but its impressive exterior is open for all to admire.");
+});
 
-        // Handle page not found (ID -1) or invalid result
-        if (pageId === "-1") {
-            console.warn("No page found for the query:", query);
-            speak("Sorry, I couldn't find any information on that topic. Please double-check the spelling or try a different term.");
-            return;
-        }
+document.querySelector("#btn11").addEventListener("click", () => {
+    speak("Bhaktapur is known as the City of Devotees because of its deeply rooted religious culture and the number of temples, shrines, and sacred sites within the city. It is home to countless Hindu and Buddhist temples, and festivals, and its inhabitants have a strong devotion to preserving their spiritual heritage.");
+});
 
-        // Check for redirects: If there is a redirect, follow it
-        if (data.query.redirects) {
-            const redirectTitle = data.query.redirects[0].to;
-            console.log("Redirecting to:", redirectTitle);
-            fetchWikipediaData(redirectTitle); // Recursive call with the redirected title
-            return; // Exit current function to prevent duplicate calls
-        }
+document.querySelector("#btn12").addEventListener("click", () => {
+    speak("To get to Bhaktapur Durbar Square from Kathmandu, you can take a taxi or local bus. The distance is about 12 kilometers, and the journey typically takes around 30 to 45 minutes, depending on traffic. Alternatively, you can hire a private car or use a ride-hailing service for a more convenient experience.");
+});
 
-        // Handle valid page and extract
-        const page = pages[pageId];
-        const extract = page.extract;
+document.querySelector("#btn13").addEventListener("click", () => {
+    speak("Bhaktapur is famous for its traditional Newar arts and crafts. Some unique souvenirs include handcrafted wooden masks, pottery, handmade paper, traditional jewelry, and Newar-style thangka paintings. You can also buy the famous King Curd (Juju Dhau) as a sweet treat to take home.");
+});
 
-        // Handle cases where there is no extract or summary available
-        if (!extract) {
-            console.warn("Extract is empty for page:", query);
-            speak("Sorry, I couldn't retrieve detailed information from Wikipedia.");
-        } else {
-            // Speak the extract if available
-            speak(extract);
-        }
-    } catch (error) {
-        console.error("Error during fetch:", error);
-        speak("Sorry, I encountered an error while searching.");
-    }
-}
+document.querySelector("#btn14").addEventListener("click", () => {
+    speak("Bhaktapur Durbar Square has a rich history, dating back to the Malla Dynasty, which ruled the Kathmandu Valley from the 12th to the 18th centuries. It was the royal seat of the Malla kings and has since become a symbol of the art, architecture, and culture of the Newar people. The square was declared a UNESCO World Heritage Site in 1979.");
+});
+
+document.querySelector("#btn15").addEventListener("click", () => {
+    speak("To explore Bhaktapur Durbar Square thoroughly, a visit of about 3 to 4 hours is recommended. This will allow you to enjoy the various temples, monuments, and the rich history of the area. If you're interested in local culture and shopping, you might want to spend more time in the square's vibrant surroundings.");
+});
+
+document.querySelector("#btn16").addEventListener("click", () => {
+    speak("Bhaktapur is known for its delicious traditional Newar cuisine. You should try dishes like Momo (dumplings), Chatamari (Newar-style pancake), Kwati (a mixed bean soup), and the famous Juju Dhau (King Curd). You can also enjoy traditional drinks like Raksi, a local rice wine.");
+});
+
+document.querySelector("#btn17").addEventListener("click", () => {
+    speak("The best time to visit Bhaktapur Durbar Square is during the cooler months from October to March, when the weather is pleasant and ideal for sightseeing. If you want to experience the festivals, visiting during festivals like Bisket Jatra (April) or Indra Jatra (August/September) will give you a chance to witness vibrant processions and rituals.");
+});
+
+document.querySelector("#btn18").addEventListener("click", () => {
+    speak("Yes, Bhaktapur Durbar Square is generally safe for tourists. However, like in any busy tourist area, it's always a good idea to stay aware of your surroundings and take care of your belongings. The locals are friendly and welcoming, and there are usually plenty of security personnel around, especially during busy times.");
+});
