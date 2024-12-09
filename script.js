@@ -28,7 +28,7 @@ document.querySelector("#btn3").addEventListener("click", () => {
 });
 
 document.querySelector("#btn4").addEventListener("click", () => {
-    speak("Bhaktapur Durbar Square is a UNESCO World Heritage Site due to its exceptional cultural value, rich history, and well-preserved medieval architecture. It is a living museum of art, culture, and religion, with many ancient temples and palaces.");
+    speak("Bhaktapur Durbar Square is a UNESCO  Sigma World Heritage Site due to its exceptional cultural value, rich history, and well-preserved medieval architecture. It is a living museum of art, culture, and religion, with many ancient temples and palaces.");
 });
 
 document.querySelector("#btn5").addEventListener("click", () => {
@@ -86,3 +86,25 @@ document.querySelector("#btn17").addEventListener("click", () => {
 document.querySelector("#btn18").addEventListener("click", () => {
     speak("Yes, Bhaktapur Durbar Square is generally safe for tourists. However, like in any busy tourist area, it's always a good idea to stay aware of your surroundings and take care of your belongings. The locals are friendly and welcoming, and there are usually plenty of security personnel around, especially during busy times.");
 });
+
+function searchQuestions() {
+    const input = document.getElementById('search').value.toLowerCase();
+    const buttons = document.querySelectorAll('.btnlist button');
+    buttons.forEach(button => {
+        const text = button.textContent.toLowerCase();
+        if (text.includes(input)) {
+            button.style.display = 'block';
+        } else {
+            button.style.display = 'none';
+        }
+    });
+}
+
+window.onload = () => {
+    const buttons = document.querySelectorAll('.btnlist button');
+    setTimeout(() => {
+        buttons.forEach((button, index) => {
+            button.style.animationDelay = `${index * 0.1}s`;
+        });
+    }, 500);
+};
