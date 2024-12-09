@@ -1,20 +1,53 @@
 function speak(text) {
     if ('speechSynthesis' in window) {
+       
         let text_speak = new SpeechSynthesisUtterance(text);
+        text_speak.rate = 1.1;  
+        text_speak.lang = "en-GB";  
+
+        let voices = window.speechSynthesis.getVoices();
+        text_speak.voice = voices.find(voice => voice.name.includes('UK English Male')) || voices[0];
+
         
-        text_speak.rate = 1;
-        text_speak.pitch = 1;
-        text_speak.volume = 1;
-        text_speak.lang = "en-GB";
-        
-        window.speechSynthesis.cancel();  // Stop any ongoing speech
+        window.speechSynthesis.cancel();
         window.speechSynthesis.speak(text_speak);
     } else {
         console.error("Speech synthesis is not supported in this browser.");
     }
 }
 
-// Event listeners for each button to trigger specific responses
+
+document.getElementById('toggleMode').addEventListener('click', () => {
+    document.body.classList.toggle('light-mode');
+    const isLightMode = document.body.classList.contains('light-mode');
+    localStorage.setItem('darkMode', isLightMode ? 'light' : 'dark');
+
+    const icon = document.getElementById('toggleModeIcon');
+    icon.alt = isLightMode ? 'Toggle Dark Mode' : 'Toggle Light Mode';
+});
+
+window.onload = () => {
+    if (localStorage.getItem('darkMode') === 'light') {
+        document.body.classList.add('light-mode');
+        document.getElementById('toggleModeIcon').alt = 'Toggle Dark Mode';
+    }
+
+    const buttons = document.querySelectorAll('.btnlist button');
+    setTimeout(() => {
+        buttons.forEach((button, index) => {
+            button.style.animationDelay = `${index * 0.1}s`;
+        });
+    }, 500);
+};
+
+function searchQuestions() {
+    const input = document.getElementById('search').value.toLowerCase();
+    const buttons = document.querySelectorAll('.btnlist button');
+    buttons.forEach(button => {
+        button.style.display = button.textContent.toLowerCase().includes(input) ? 'block' : 'none';
+    });
+}
+
 document.querySelector("#btn1").addEventListener("click", () => {
     speak("Bhaktapur Durbar Square is a historic square located in the heart of Bhaktapur, Nepal. It's known for its rich culture, ancient temples, palaces, and impressive architecture. It's a UNESCO World Heritage Site.");
 });
@@ -28,7 +61,7 @@ document.querySelector("#btn3").addEventListener("click", () => {
 });
 
 document.querySelector("#btn4").addEventListener("click", () => {
-    speak("Bhaktapur Durbar Square is a UNESCO  Sigma World Heritage Site due to its exceptional cultural value, rich history, and well-preserved medieval architecture. It is a living museum of art, culture, and religion, with many ancient temples and palaces.");
+    speak("Bhaktapur Durbar Square is a UNESCO World Heritage Site due to its exceptional cultural value, rich history, and well-preserved medieval architecture. It is a living museum of art, culture, and religion, with many ancient temples and palaces.");
 });
 
 document.querySelector("#btn5").addEventListener("click", () => {
@@ -78,33 +111,3 @@ document.querySelector("#btn15").addEventListener("click", () => {
 document.querySelector("#btn16").addEventListener("click", () => {
     speak("Bhaktapur is known for its delicious traditional Newar cuisine. You should try dishes like Momo (dumplings), Chatamari (Newar-style pancake), Kwati (a mixed bean soup), and the famous Juju Dhau (King Curd). You can also enjoy traditional drinks like Raksi, a local rice wine.");
 });
-
-document.querySelector("#btn17").addEventListener("click", () => {
-    speak("The best time to visit Bhaktapur Durbar Square is during the cooler months from October to March, when the weather is pleasant and ideal for sightseeing. If you want to experience the festivals, visiting during festivals like Bisket Jatra (April) or Indra Jatra (August/September) will give you a chance to witness vibrant processions and rituals.");
-});
-
-document.querySelector("#btn18").addEventListener("click", () => {
-    speak("Yes, Bhaktapur Durbar Square is generally safe for tourists. However, like in any busy tourist area, it's always a good idea to stay aware of your surroundings and take care of your belongings. The locals are friendly and welcoming, and there are usually plenty of security personnel around, especially during busy times.");
-});
-
-function searchQuestions() {
-    const input = document.getElementById('search').value.toLowerCase();
-    const buttons = document.querySelectorAll('.btnlist button');
-    buttons.forEach(button => {
-        const text = button.textContent.toLowerCase();
-        if (text.includes(input)) {
-            button.style.display = 'block';
-        } else {
-            button.style.display = 'none';
-        }
-    });
-}
-
-window.onload = () => {
-    const buttons = document.querySelectorAll('.btnlist button');
-    setTimeout(() => {
-        buttons.forEach((button, index) => {
-            button.style.animationDelay = `${index * 0.1}s`;
-        });
-    }, 500);
-};
