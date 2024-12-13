@@ -111,3 +111,11 @@ document.querySelector("#btn15").addEventListener("click", () => {
 document.querySelector("#btn16").addEventListener("click", () => {
     speak("Bhaktapur is known for its delicious traditional Newar cuisine. You should try dishes like Momo (dumplings), Chatamari (Newar-style pancake), Kwati (a mixed bean soup), and the famous Juju Dhau (King Curd). You can also enjoy traditional drinks like Raksi, a local rice wine.");
 });
+
+document.querySelector("#btn17").addEventListener("click", () => {
+    speak("The best time to visit Bhaktapur is from October to March, with pleasant, mild weather.");
+});
+
+document.querySelector("#btn18").addEventListener("click", () => {
+    speak("Bhaktapur Durbar Square is safe for tourists, but always stay aware of your surroundings and belongings.");
+});
